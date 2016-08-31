@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+		var name = "Anonymous";
+		console.log(io);
+		var socketio = io.connect('http://127.0.0.1:8080');
+
+		socketio.on('message_to_client', function(data){
+			document.getElementById('chats').innerHTML += '<div class="im">' + data.message + ' -- ' + data.name + ' -- ' + data.date +'</div>';
+		})
+
+		socketio.on('message_to_client2', function(data){
+			document.getElementById('onlineNow').innerHTML += '<div class="im">' + data.name + '</div>';
+		})
+
+		function sendMessage(){
+			var message = document.getElementById('message').value;
+			var d = new Date();
+			var date = d.toString();
+			socketio.emit(
+				'message_to_server', 
+				{
+					message: message,
+					name: name,
+					date: date
+				}
+			);
+		}
+
+		function sendName(){
+			name = document.getElementById('nameInput').value;
+			socketio.emit(
+				'message_to_server2', 
+				{
+					name: name,
+				}
+			);
+		}
+
+	</script>
+
+	<style type="text/css" media="screen">
+
+		body {
+			font-family: sans-serif;
+		}
+
+		#chat-bar {
+			width: 300px;
+   			height: 600px;
+   			position: fixed;
+   			left: 0px;
+   			top: 100px;
+   			border: 1px solid black;
+   			background-color: #c1bdbd;
+
+		}
+
+		#chat-window {
+			width: 600px;
+   			height: 600px;
+   			position: fixed;
+   			left: 300px;
+   			top: 100px;
+   			border: 1px solid black;
+
+		}
+
+		#message {
+			position: fixed;
+			top: 645px;
+			margin: 5px;
+			width: 520px;
+			line-height: 40px;
+			font-size: 30px;
+			border: 0px;
+			border-bottom: 1px solid black
+		}
+
+		#post {
+			position: fixed;
+			top: 650px;
+			left: 840px;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			border: 0px;
+			background-color: red;
+		}
+
+		#sign-in-button {
+			position: fixed;
+			top: 650px;
+			left: 240px;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			border: 0px;
+			background-color: red;
+		}
+
+		#nameInput {
+			position: fixed;
+			top: 645px;
+			margin: 5px;
+			width: 220px;
+			line-height: 40px;
+			font-size: 30px;
+			border: 0px;
+			border-bottom: 1px solid black;
+			background-color: rgba(193, 189, 189,0.8);
+		}
+
+		#chats {
+			margin: 5px;
+			font-size: 30px;
+		}
+
+		#online {
+			padding-left: 5px;
+			/* background-color: gray; */
+			font-size: 30px;
+			line-height: 50px;
+		}
+
+		#onlineNow {
+			padding-left: 5px;
+			font-size: 20px;
+			line-height: 50px;
+		}
+
+		::-webkit-input-placeholder {
+			color: red;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<h1>Chat Room</h1>
+	
+
+
+	<div id="chat-bar">
+		<div id="online">
+			<u>Online Now</u>
+		</div>
+
+		<div id="onlineNow">
+
+		</div>
+
+		<div id="name">
+			<input type='text' id="nameInput" placeholder="Sign In">
+			<button id="sign-in-button" onclick="sendName()"></button>
+		</div>
+	</div>
+
+	<div id="chat-window">
+		<div id="chats">
+			
+		</div>
+		
+		<input type="text" id="message" placeholder="Type Message....">
+		<button id="post" onclick="sendMessage()"></button>
+		
+	</div>
+
+</body>
+</html>

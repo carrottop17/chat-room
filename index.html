@@ -1,29 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp">
 <head>
 	<title></title>
 
 	<script src="/socket.io/socket.io.js" type="text/javascript"></script>
 
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
 	<script type="text/javascript">
-		var name = "Anonymous";
-		console.log(io);
+		var name = prompt("what is your name?");
+		// console.log(window);
+		// console.log(window.io);
 		var socketio = io.connect('http://127.0.0.1:8080');
+		socketio.emit('name_to_server', name);
 
 		socketio.on('message_to_client', function(data){
-			document.getElementById('chats').innerHTML += '<div class="im">' + data.message + ' -- ' + data.name + ' -- ' + data.date +'</div>';
+			document.getElementById('chats').innerHTML += '<div class="im">' + data.message + ' -- ' + data.name + ' -- ' +data.date+'</div>';
 		})
 
-		socketio.on('message_to_client2', function(data){
-			document.getElementById('onlineNow').innerHTML += '<div class="im">' + data.name + '</div>';
-		})
+		socketio.on('users', function(socketUsers){
+			var newHTML = "";
+			// console.log(data.socketUsers.length);
+			for(var i=0; i<socketUsers.length; i++){
+				// console.log(i);
+				 newHTML += '<div class="user">'+socketUsers[i].name+'</div>'
+			}
+			document.getElementById('onlineNow').innerHTML = newHTML;
+		});
 
 		function sendMessage(){
+			var date = new Date().toLocaleString();
 			var message = document.getElementById('message').value;
-			var d = new Date();
-			var date = d.toString();
 			socketio.emit(
-				'message_to_server', 
+				'message_to_server',
 				{
 					message: message,
 					name: name,
@@ -34,13 +43,9 @@
 
 		function sendName(){
 			name = document.getElementById('nameInput').value;
-			socketio.emit(
-				'message_to_server2', 
-				{
-					name: name,
-				}
-			);
+			socketio.emit('name_to_server',name);
 		}
+		
 
 	</script>
 
@@ -50,14 +55,25 @@
 			font-family: sans-serif;
 		}
 
+		.im{
+			border-bottom: 1px solid black;
+		}
+
+		.user{
+			padding-left: 5px;
+			font-size: 30px;
+			line-height: 50px;
+		}
+
 		#chat-bar {
 			width: 300px;
    			height: 600px;
    			position: fixed;
-   			left: 0px;
+   			left: 10px;
    			top: 100px;
    			border: 1px solid black;
-   			background-color: #c1bdbd;
+   			background-color: rgba(118, 255, 0, 1);
+   			border-radius: 20px;
 
 		}
 
@@ -65,9 +81,14 @@
 			width: 600px;
    			height: 600px;
    			position: fixed;
-   			left: 300px;
+   			left: 320px;
    			top: 100px;
    			border: 1px solid black;
+   			border-radius: 20px;
+   			padding-left: 5px;
+			font-size: 30px;
+			line-height: 50px;
+			background-color: rgba(19, 233, 244, 0.5);
 
 		}
 
@@ -79,13 +100,14 @@
 			line-height: 40px;
 			font-size: 30px;
 			border: 0px;
-			border-bottom: 1px solid black
+			border-bottom: 1px solid black;
+			background-color: rgba(19, 233, 244, 0.0);
 		}
 
 		#post {
 			position: fixed;
 			top: 650px;
-			left: 840px;
+			left: 860px;
 			width: 45px;
 			height: 45px;
 			border-radius: 50%;
@@ -96,7 +118,7 @@
 		#sign-in-button {
 			position: fixed;
 			top: 650px;
-			left: 240px;
+			left: 250px;
 			width: 45px;
 			height: 45px;
 			border-radius: 50%;
@@ -107,13 +129,14 @@
 		#nameInput {
 			position: fixed;
 			top: 645px;
+			left: 20px;
 			margin: 5px;
 			width: 220px;
 			line-height: 40px;
 			font-size: 30px;
 			border: 0px;
 			border-bottom: 1px solid black;
-			background-color: rgba(193, 189, 189,0.8);
+			background-color: rgba(118, 255, 0, 0.8);
 		}
 
 		#chats {
@@ -137,13 +160,37 @@
 		::-webkit-input-placeholder {
 			color: red;
 		}
+		#canvas{
+   			position: fixed;
+   			left: 935px;
+   			top: 100px;
+   			border: 1px solid black;
+   			border-radius: 20px;
+		}
+
+		#tool-bar{
+			position: fixed;
+   			left: 950px;
+   			top: 70px;
+   			/* border: 1px solid black;
+   			border-radius: 10px; */
+		}
+
+		#drawTitle{
+			padding-left: 5px;
+			font-size: 30px;
+			line-height: 50px;
+			position: fixed;
+   			left: 935px;
+   			top: 100px;
+		}
 
 	</style>
 
 </head>
-<body>
+<body ng-controller="myController">
 
-	<h1>Chat Room</h1>
+	<h1>Pictionary</h1>
 	
 
 
@@ -163,6 +210,7 @@
 	</div>
 
 	<div id="chat-window">
+		<u>Guess</u>
 		<div id="chats">
 			
 		</div>
@@ -171,6 +219,107 @@
 		<button id="post" onclick="sendMessage()"></button>
 		
 	</div>
+	<div id="drawTitle">
+		<u>Draw</u>
+		<canvas id="canvas" width="600" height="600">
+			
+		</canvas>
+	</div>
+	<div id="tool-bar">
+		<input type="color" id="color-picker">
+		<label>Choose your thickness</label>
+		<input type="number" id="thickness-picker" placeholder="10">
+	</div>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+<script type="text/javascript">
+	var myApp = angular.module('myApp', []);
+	myApp.controller('myController',function($scope){
+		$scope.message = "Test";
+	});
+
+	// canvas
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		var mouseDown = false;
+		var color = null;
+		var thickness = 10;
+		var colorChoice = document.getElementById('color-picker');
+		var mousePosition;
+		var lastMousePosition = null;
+
+		colorChoice.addEventListener('change', function(event){
+			color = colorChoice.value;
+			console.log(color);
+		})
+
+		var thicknessPicker = document.getElementById('thickness-picker');
+		thicknessPicker.addEventListener('change', function(event){
+			thickness = thicknessPicker.value;
+			console.log(thickness);
+		});
+
+		canvas.addEventListener('mousedown', function(event){
+			mouseDown = true;
+		})
+
+		canvas.addEventListener('mouseup', function(event){
+			mouseDown = false;
+			lastMousePosition = null;
+		})
+
+		canvas.addEventListener('mousemove', function(event){
+			if(mouseDown){
+				var magicBrushX = event.pageX - canvas.offsetLeft;
+				var magicBrushY = event.pageY - canvas.offsetTop;
+				// console.log(magicBrushX);
+				// console.log(magicBrushY);
+
+				mousePosition = {
+					x: magicBrushX,
+					y: magicBrushY
+				}
+
+				console.dir(canvas);
+
+				if(lastMousePosition !== null){
+				context.strokeStyle = color;
+				context.lineJoin = 'round';
+				context.lineWidth = thickness;
+				context.beginPath();
+				context.moveTo(lastMousePosition.x, lastMousePosition.y);
+				context.lineTo(mousePosition.x, mousePosition.y);
+				context.closePath();
+				context.stroke();
+				}
+
+				var drawingData = {
+					mousePosition: mousePosition,
+					lastMousePosition: lastMousePosition,
+					color: color,
+					thickness: thickness
+				}
+
+				lastMousePosition = {
+					x: mousePosition.x,
+					y: mousePosition.y
+				}
+			}
+
+		})
+
+</script>
 
 </body>
-</html>
+</html
+
+
+
+
+
+
+
+
+
+
+

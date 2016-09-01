@@ -29,6 +29,7 @@
 		});
 
 		function sendMessage(){
+			event.preventDefault();
 			var date = new Date().toLocaleString();
 			var message = document.getElementById('message').value;
 			socketio.emit(
@@ -42,6 +43,7 @@
 		}
 
 		function sendName(){
+			event.preventDefault();
 			name = document.getElementById('nameInput').value;
 			socketio.emit('name_to_server',name);
 		}
@@ -219,8 +221,10 @@
 		</div>
 
 		<div id="name">
+			<form>
 			<input type='text' id="nameInput" placeholder="Sign In">
 			<button class="btn" id="sign-in-button" onclick="sendName()"></button>
+			</form>
 		</div>
 	</div>
 
@@ -229,10 +233,10 @@
 		<div id="chats">
 			
 		</div>
-		
+		<form>
 		<input type="text" id="message" placeholder="Type Message....">
 		<button class="btn" id="post" onclick="sendMessage()"></button>
-		
+		</form>
 	</div>
 	<div id="drawTitle">
 		<u>Draw</u>

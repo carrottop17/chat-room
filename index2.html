@@ -15,7 +15,7 @@
 		socketio.emit('name_to_server', name);
 
 		socketio.on('message_to_client', function(data){
-			document.getElementById('chats').innerHTML += '<div class="im">' + data.message + ' // ' + data.name + '<span style="float:right">' + data.date +'</span>' + '</div>';
+			document.getElementById('chats').innerHTML += '<div class="im">' + data.message + ' -- ' + data.name + ' -- ' +data.date+'</div>';
 		})
 
 		socketio.on('users', function(socketUsers){
@@ -53,151 +53,136 @@
 
 		body {
 			font-family: sans-serif;
-			background-color: #247BA0;
-			color: #50514F;
-		}
-		h1{
-			color: #F25F5C;
 		}
 
 		.im{
-			/* border-bottom: 1px solid black; */
-			background-color: rgba(221, 212, 212, 0.5);
-			border-radius: 20px;
-			height: 25px;
-			padding-left: 10px;
-			padding-top: 5px;
-			margin: 5px;
-			padding-right: 10px;
+			border-bottom: 1px solid black;
 		}
 
 		.user{
 			padding-left: 5px;
-			font-size: 12px;
-			line-height: 15px;
+			font-size: 30px;
+			line-height: 50px;
 		}
 
 		#chat-bar {
-			width: 150px;
-   			height: 400px;
+			width: 300px;
+   			height: 600px;
    			position: fixed;
    			left: 10px;
    			top: 100px;
-   			border: 2px solid #50514F;
-   			background-color: rgba(255, 224, 102, 1);
-   			border-radius: 5px;
+   			border: 1px solid black;
+   			background-color: rgba(118, 255, 0, 1);
+   			border-radius: 20px;
 
 		}
 
 		#chat-window {
-			width: 400px;
-   			height: 390px;
+			width: 600px;
+   			height: 600px;
    			position: fixed;
-   			left: 170px;
+   			left: 320px;
    			top: 100px;
-   			border: 2px solid #50514F;
-   			border-radius: 5px;
-   			padding: 5px;
-			font-size: 20px;
-			line-height: 20px;
-			background-color: #70C1B3;
+   			border: 1px solid black;
+   			border-radius: 20px;
+   			padding-left: 5px;
+			font-size: 30px;
+			line-height: 50px;
+			background-color: rgba(19, 233, 244, 0.5);
 
 		}
 
 		#message {
 			position: fixed;
-			top: 470px;
+			top: 645px;
 			margin: 5px;
-			width: 320px;
-			line-height: 15px;
-			font-size: 15px;
+			width: 520px;
+			line-height: 40px;
+			font-size: 30px;
 			border: 0px;
-			border-bottom: 1px solid #50514F;
+			border-bottom: 1px solid black;
 			background-color: rgba(19, 233, 244, 0.0);
 		}
 
 		#post {
 			position: fixed;
-			top: 470px;
-			left: 510px;
-			width: 25px;
-			height: 25px;
+			top: 650px;
+			left: 860px;
+			width: 45px;
+			height: 45px;
 			border-radius: 50%;
 			border: 0px;
-			background-color: #F25F5C;
+			background-color: red;
 		}
 
 		#sign-in-button {
 			position: fixed;
-			top: 470px;
-			left: 120px;
-			width: 25px;
-			height: 25px;
+			top: 650px;
+			left: 250px;
+			width: 45px;
+			height: 45px;
 			border-radius: 50%;
 			border: 0px;
-			background-color: #F25F5C;
+			background-color: red;
 		}
 
 		#nameInput {
 			position: fixed;
-			top: 470px;
-			left: 10px;
+			top: 645px;
+			left: 20px;
 			margin: 5px;
-			width: 100px;
-			line-height: 15px;
-			font-size: 15px;
+			width: 220px;
+			line-height: 40px;
+			font-size: 30px;
 			border: 0px;
-			border-bottom: 2px solid #50514F;
-			background-color: rgba(118, 255, 0, 0.0);
+			border-bottom: 1px solid black;
+			background-color: rgba(118, 255, 0, 0.8);
 		}
 
 		#chats {
 			margin: 5px;
-			font-size: 12px;
+			font-size: 30px;
 		}
 
 		#online {
-			padding: 5px;
+			padding-left: 5px;
 			/* background-color: gray; */
+			font-size: 30px;
+			line-height: 50px;
+		}
+
+		#onlineNow {
+			padding-left: 5px;
 			font-size: 20px;
-			line-height: 20px;
+			line-height: 50px;
 		}
 
 		::-webkit-input-placeholder {
-			color: #F25F5C;
+			color: red;
 		}
 		#canvas{
    			position: fixed;
-   			left: 590px;
+   			left: 935px;
    			top: 100px;
-   			border: 2px solid #50514F;
-   			border-radius: 5px;
-   			background-color: white;
-   			z-index: -100;
+   			border: 1px solid black;
+   			border-radius: 20px;
 		}
 
 		#tool-bar{
 			position: fixed;
-   			left: 600px;
-   			top: 450px;
-   			font-size: 12px;
-   			z-index: 10;
+   			left: 950px;
+   			top: 70px;
    			/* border: 1px solid black;
    			border-radius: 10px; */
 		}
 
 		#drawTitle{
 			padding-left: 5px;
-			font-size: 20px;
-			line-height: 20px;
+			font-size: 30px;
+			line-height: 50px;
 			position: fixed;
-   			left: 590px;
-   			top: 105px;
-   			z-index: 10;
-		}
-
-		#thickness-picker{
-			width: 44px;
+   			left: 935px;
+   			top: 100px;
 		}
 
 	</style>
@@ -211,7 +196,7 @@
 
 	<div id="chat-bar">
 		<div id="online">
-			<u>Online</u>
+			<u>Online Now</u>
 		</div>
 
 		<div id="onlineNow">
@@ -220,7 +205,7 @@
 
 		<div id="name">
 			<input type='text' id="nameInput" placeholder="Sign In">
-			<button class="btn" id="sign-in-button" onclick="sendName()"></button>
+			<button id="sign-in-button" onclick="sendName()"></button>
 		</div>
 	</div>
 
@@ -231,24 +216,19 @@
 		</div>
 		
 		<input type="text" id="message" placeholder="Type Message....">
-		<button class="btn" id="post" onclick="sendMessage()"></button>
+		<button id="post" onclick="sendMessage()"></button>
 		
 	</div>
 	<div id="drawTitle">
 		<u>Draw</u>
-		<canvas id="canvas" width="400" height="400">
+		<canvas id="canvas" width="600" height="600">
 			
 		</canvas>
 	</div>
 	<div id="tool-bar">
-		<div>
 		<input type="color" id="color-picker">
-		<label>Choose your color</label>
-		</div>
-		<div>
-		<input type="number" id="thickness-picker" placeholder="10">
 		<label>Choose your thickness</label>
-		</div>
+		<input type="number" id="thickness-picker" placeholder="10">
 	</div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
